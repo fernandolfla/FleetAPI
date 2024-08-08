@@ -60,7 +60,7 @@ app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 //var options = new RewriteOptions().AddIISUrlRewrite(app.Environment.ContentRootFileProvider, "UrlRewrite.xml");
 //app.UseRewriter(options);
 
-app.UseCors("AllowAllOrigins");
+//app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 
