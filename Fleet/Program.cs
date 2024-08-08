@@ -57,8 +57,8 @@ app.UseMiddleware(typeof(ErrorHandlingMiddleware));
     app.UseSwaggerUI();
 }
 
-var options = new RewriteOptions().AddIISUrlRewrite(app.Environment.ContentRootFileProvider, "UrlRewrite.xml");
-app.UseRewriter(options);
+//var options = new RewriteOptions().AddIISUrlRewrite(app.Environment.ContentRootFileProvider, "UrlRewrite.xml");
+//app.UseRewriter(options);
 
 app.UseCors("AllowAllOrigins");
 
