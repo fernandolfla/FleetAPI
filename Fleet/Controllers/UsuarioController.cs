@@ -20,7 +20,7 @@ namespace Fleet.Controllers
         [AllowAnonymous]
         public IActionResult Logar([FromBody] LoginRequest loginRequest)
         {
-            var token = _usuarioService.Logar(loginRequest.Email, loginRequest.Password);
+            var token = _usuarioService.Logar(loginRequest.Email, loginRequest.Password); 
 
             return Ok(new
             {
