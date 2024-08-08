@@ -29,13 +29,44 @@ namespace Fleet.Controllers
             });
         }
 
-        //[HttpPost("[Action]")]
-        //[Authorize(Policy = "admin")]
-        //public IActionResult Criar([FromBody] UsuarioRequest usuarioRequest)
-        //{
-        //    _usuarioService.Criar(usuarioRequest);
-        //    return Ok();
-        //}
+
+        [HttpPost("[Action]")]
+        [AllowAnonymous]
+        public IActionResult Recuperar([FromBody] string email)  //recebe um e-mail, verifica se ele existe na base, manda código para validar
+        {
+            
+            return Ok(new
+            {
+                email = "Recuperado",
+                
+            });
+        }
+
+        [HttpPost("[Action]")]
+        [AllowAnonymous]
+        public IActionResult ConfirmarCodigo([FromBody] string email, string codigo)  //Recebe e-mail e código para resetar a senha
+        {
+
+            return Ok(new
+            {
+                email = "Redefinir",
+                codigo = "codigo",
+
+            });
+        }
+
+        [HttpPost("[Action]")]
+        [AllowAnonymous]
+        public IActionResult AlterarSenha([FromBody] string email , string senha, string codigo)  //Recebe o email e senha , enviar o código junto para alterar
+        {
+            return Ok(new
+            {
+                email = "Redefinir",
+                codigo = "codigo",
+                senha = "senha",
+
+            });
+        }
 
     }
 }
