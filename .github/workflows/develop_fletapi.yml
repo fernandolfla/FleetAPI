@@ -24,7 +24,7 @@ jobs:
       - name: Edit connection string in appsettings.json
         uses: benday-inc/edit-dbconnstr-in-appsettings@main
         with:
-          pathtosettingsfile: './appsettings.json'
+          pathtosettingsfile: './Fleet/appsettings.json'
           name: "DB_MySQL"
           connectionstring: ${{ secrets.BANCO_HOST }};${{ secrets.BANCO_DATABASE }};${{ secrets.BANCO_USER }};${{ secrets.BANCO_SENHA }}
      
