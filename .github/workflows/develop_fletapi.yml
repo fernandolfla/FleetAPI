@@ -17,10 +17,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-      
-      - name: Mostra a Pasta de build
-        run: dir 
-        
+              
       - name: Edit connection string in appsettings.json
         uses: benday-inc/edit-dbconnstr-in-appsettings@main
         with:
@@ -32,8 +29,8 @@ jobs:
         run: |
           $appSettingsPath = './Fleet/appsettings.json'
           $json = Get-Content $appSettingsPath | ConvertFrom-Json
-          $json.Authorization.Secret = "${{ secrets.AUTHORIZATION }}"
-          $json.Crypto.Secret = "${{ secrets.CRYPTO }}"
+          $json.Authorization.Secret = ${{ secrets.AUTHORIZATION }}
+          $json.Crypto.Secret = ${{ secrets.CRYPTO }}
           $json | ConvertTo-Json -Compress | Set-Content $appSettingsPath
           
       - name: Display content of appsettings.json
