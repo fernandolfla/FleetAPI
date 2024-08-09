@@ -28,19 +28,17 @@ jobs:
           name: "DB_MySQL"
           connectionstring: ${{ secrets.BANCO_HOST }};${{ secrets.BANCO_DATABASE }};${{ secrets.BANCO_USER }};${{ secrets.BANCO_SENHA }}
         
-      - name: Edit Authorization Secret in appsettings.json
-        uses: benday-inc/edit-dbconnstr-in-appsettings@main
-        with:
-          pathtosettingsfile: './Fleet/appsettings.json'
-          name: "Authorization:Secret"
-          connectionstring: ${{ secrets.AUTHORIZATION }}
+      - name: Update Authorization Secret in appsettings.json
+        run: |
+          $json = Get-Content './Fleet/appsettings.json' | ConvertFrom-Json
+          $json.Authorization.Secret = "${{ secrets.AUTHORIZATION }}"
+          $json | ConvertTo-Json | Set-Content './Fleet/appsettings.json'
 
-      - name: Edit Crypto Secret in appsettings.json
-        uses: benday-inc/edit-dbconnstr-in-appsettings@main
-        with:
-          pathtosettingsfile: './Fleet/appsettings.json'
-          name: "Crypto:Secret"
-          connectionstring: ${{ secrets.CRYPTO }}   
+      - name: Update Crypto Secret in appsettings.json
+        run: |
+          $json = Get-Content './Fleet/appsettings.json' | ConvertFrom-Json
+          $json.Crypto.Secret = "${{ secrets.CRYPTO }}"
+          $json | ConvertTo-Json | Set-Content './Fleet/appsettings.json'  
           
       - name: Display content of appsettings.json
         run: type .\Fleet\appsettings.json
