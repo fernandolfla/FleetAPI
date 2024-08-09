@@ -6,11 +6,8 @@ Este projeto será realizado com cídigo livre, afim de promover o ensino aprend
 
 <h1> Dependências </h1>  <br>
 Nuget.org 
-Microsoft.EntityFrameworkCore                     7.02 <br>
-Microsoft.EntityFrameworkCore.Tools               7.02 <br>
-Microsoft.NET.Test.Sdk                            17.3.2 <br>
-Moq                                               4.18.4 <br>
-Pomelo.EntityFrameworkCore.MySql                  7.0.0 <br>
+Microsoft.EntityFrameworkCore                     8.01 <br>
+Microsoft.EntityFrameworkCore.Tools               8.01 <br>
 Swashbuckle.AspNetCore                            6.2.3 <br>
 xunit                                             2.4.2 <br>
 xunit.runner.visualstudio                         2.4.5 <br>
