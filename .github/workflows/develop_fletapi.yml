@@ -27,6 +27,23 @@ jobs:
           pathtosettingsfile: './Fleet/appsettings.json'
           name: "DB_MySQL"
           connectionstring: ${{ secrets.BANCO_HOST }};${{ secrets.BANCO_DATABASE }};${{ secrets.BANCO_USER }};${{ secrets.BANCO_SENHA }}
+        
+      - name: Edit Authorization Secret in appsettings.json
+        uses: benday-inc/edit-dbconnstr-in-appsettings@main
+        with:
+          pathtosettingsfile: './Fleet/appsettings.json'
+          name: "Secret"
+          authorization: ${{ secrets.AUTHORIZATION }}
+
+      - name: Edit Crypto Secret in appsettings.json
+        uses: benday-inc/edit-dbconnstr-in-appsettings@main
+        with:
+          pathtosettingsfile: './Fleet/appsettings.json'
+          name: "Secret"
+          crypto: ${{ secrets.CRYPTO }}   
+          
+      - name: Display content of appsettings.json
+        run: type .\Fleet\appsettings.json
      
       - name: Build with dotnet
         run: dotnet build --configuration Release
