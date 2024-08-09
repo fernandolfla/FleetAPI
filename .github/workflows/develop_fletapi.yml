@@ -32,15 +32,15 @@ jobs:
         uses: benday-inc/edit-dbconnstr-in-appsettings@main
         with:
           pathtosettingsfile: './Fleet/appsettings.json'
-          name: "Secret"
-          authorization: ${{ secrets.AUTHORIZATION }}
+          name: "Authorization:Secret"
+          connectionstring: ${{ secrets.AUTHORIZATION }}
 
       - name: Edit Crypto Secret in appsettings.json
         uses: benday-inc/edit-dbconnstr-in-appsettings@main
         with:
           pathtosettingsfile: './Fleet/appsettings.json'
-          name: "Secret"
-          crypto: ${{ secrets.CRYPTO }}   
+          name: "Crypto:Secret"
+          connectionstring: ${{ secrets.CRYPTO }}   
           
       - name: Display content of appsettings.json
         run: type .\Fleet\appsettings.json
