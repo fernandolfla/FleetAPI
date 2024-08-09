@@ -28,12 +28,13 @@ jobs:
           name: "DB_MySQL"
           connectionstring: ${{ secrets.BANCO_HOST }};${{ secrets.BANCO_DATABASE }};${{ secrets.BANCO_USER }};${{ secrets.BANCO_SENHA }}
         
-      - name: Edit connection string in appsettings.json
+      - name: Edit appsettings.json
         run: |
-          $json = Get-Content './Fleet/appsettings.json' | ConvertFrom-Json 
+          $appSettingsPath = './Fleet/appsettings.json'
+          $json = Get-Content $appSettingsPath | ConvertFrom-Json
           $json.Authorization.Secret = "${{ secrets.AUTHORIZATION }}"
           $json.Crypto.Secret = "${{ secrets.CRYPTO }}"
-          $json | ConvertTo-Json -Compress | Set-Content './Fleet/appsettings.json'
+          $json | ConvertTo-Json -Compress | Set-Content $appSettingsPath
           
       - name: Display content of appsettings.json
         run: type .\Fleet\appsettings.json
