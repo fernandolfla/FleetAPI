@@ -30,7 +30,7 @@ jobs:
         
       - name: Edit connection string in appsettings.json
         run: |
-          $json = Get-Content './Fleet/appsettings.json' | ConvertFrom-Json
+          $json = Get-Content './Fleet/appsettings.json' | ConvertFrom-Json 
           $json.Authorization.Secret = "${{ secrets.AUTHORIZATION }}"
           $json.Crypto.Secret = "${{ secrets.CRYPTO }}"
           $json | ConvertTo-Json -Compress | Set-Content './Fleet/appsettings.json'
