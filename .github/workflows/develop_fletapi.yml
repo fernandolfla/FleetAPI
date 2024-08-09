@@ -17,7 +17,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-
+        
+      - name: Edit connection string in appsettings.json
+        uses: benday-inc/edit-dbconnstr-in-appsettings@main
+        with:
+          pathtosettingsfile: './FleetApi/appsettings.json'
+          name: "DB_MySQL"
+          connectionstring: ${{ secrets.BANCO_HOST }};${{ secrets.BANCO_DATABASE }};${{ secrets.BANCO_USER }};${{ secrets.BANCO_SENHA }}
+     
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
