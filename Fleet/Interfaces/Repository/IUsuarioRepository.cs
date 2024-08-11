@@ -6,5 +6,7 @@ namespace Fleet.Interfaces.Repository
     {
         void Criar(Usuario user);
         IQueryable<Usuario> Buscar();
+        void Deletar(int id);
+        void Atualizar(int id, Usuario usuarioAtualizado);
     }
 }

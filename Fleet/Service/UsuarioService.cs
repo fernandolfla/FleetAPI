@@ -4,6 +4,8 @@ using Fleet.Interfaces.Service;
 using Fleet.Models;
 using Fleet.Validators;
 using Fleet.Resources;
+using Fleet.Controllers.Model.Request.Usuario;
+using AutoMapper;
 
 namespace Fleet.Service
 {
@@ -12,14 +14,18 @@ namespace Fleet.Service
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
+        private string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
 
-        public string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
-
-        public UsuarioService(IUsuarioRepository usuarioRepository, ITokenService tokenService, IConfiguration configuration)
+        public UsuarioService(IUsuarioRepository usuarioRepository,
+                            ITokenService tokenService,
+                            IConfiguration configuration,
+                            IMapper mapper)
         {
             _usuarioRepository = usuarioRepository;
             _tokenService = tokenService;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         public string Logar(string email, string senha)
@@ -34,11 +40,12 @@ namespace Fleet.Service
             return _tokenService.GenerateToken(usuarioBD);
         }
 
-        public void Criar(Usuario user)
+        public void Criar(UsuarioRequest user)
         {
-            Validar(user, false);
+            Usuario usuario =_mapper.Map<Usuario>(user);
+            Validar(usuario, false);
 
-            _usuarioRepository.Criar(user);
+            _usuarioRepository.Criar(usuario);
         }
 
         private void Validar(Usuario usuario, bool eLogin)

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Fleet.Controllers.Model.Request;
 using Fleet.Interfaces.Service;
+using Fleet.Controllers.Model.Request.Usuario;
 
 namespace Fleet.Controllers
 {
@@ -12,21 +11,8 @@ namespace Fleet.Controllers
     {
         private readonly IUsuarioService _usuarioService;
         public UsuarioController(IUsuarioService usuarioService)
-        {
+        {   
             _usuarioService = usuarioService;
-        }
-
-        [HttpPost("[Action]")]
-        [AllowAnonymous]
-        public IActionResult Logar([FromBody] LoginRequest loginRequest)
-        {
-            var token = _usuarioService.Logar(loginRequest.Email, loginRequest.Password); 
-
-            return Ok(new
-            {
-                Token = token,
-                Email = loginRequest.Email,
-            });
         }
 
 
@@ -68,5 +54,13 @@ namespace Fleet.Controllers
             });
         }
 
+        [HttpPost("")]
+        [AllowAnonymous]
+        public IActionResult Criar([FromBody] UsuarioRequest usuarioRequest)
+        {
+            _usuarioService.Criar(usuarioRequest);
+
+            return Created();
+        }
     }
 }

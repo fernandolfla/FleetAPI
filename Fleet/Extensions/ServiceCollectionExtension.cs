@@ -5,10 +5,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Fleet.Interfaces.Repository;
 using Fleet.Interfaces.Service;
-using Fleet.Models.Enum;
+using Fleet.Enums;
 using Fleet.Repository;
 using Fleet.Service;
 using System.Text;
+using Fleet.Mapper;
 
 namespace Fleet.Extensions
 {
@@ -28,6 +29,7 @@ namespace Fleet.Extensions
             services.AdicionarDependenciasServicos();
             services.AdicionarAutenticacao(configuration);
             services.AdicionarAutorizacao();
+            services.AdicionarMapper();
         }
 
         /// <summary>
@@ -90,5 +92,10 @@ namespace Fleet.Extensions
             });
         }
 
+
+        private static void AdicionarMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(Mapping));
+        }
     }
 }
