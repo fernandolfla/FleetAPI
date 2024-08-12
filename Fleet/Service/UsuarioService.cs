@@ -6,6 +6,7 @@ using Fleet.Validators;
 using Fleet.Resources;
 using Fleet.Controllers.Model.Request.Usuario;
 using AutoMapper;
+using Fleet.Enums;
 
 namespace Fleet.Service
 {
@@ -28,29 +29,38 @@ namespace Fleet.Service
             _mapper = mapper;
         }
 
-        public string Logar(string email, string senha)
-        {
-            var usuario = new Usuario { Email = email, Senha = senha };
-            Validar(usuario, true);
-
-            var usuarioBD = _usuarioRepository.Buscar().FirstOrDefault(x => x.Ativo && x.Email == usuario.Email && x.Senha == usuario.Senha);
-            if (usuarioBD == null)
-                throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
-
-            return _tokenService.GenerateToken(usuarioBD);
-        }
-
-        public void Criar(UsuarioRequest user)
+        public async Task Criar(UsuarioRequest user)
         {
             Usuario usuario =_mapper.Map<Usuario>(user);
-            Validar(usuario, false);
+            Validar(usuario, UsuarioRequestEnum.Criar);
 
-            _usuarioRepository.Criar(usuario);
+            await _usuarioRepository.Criar(usuario);
         }
 
-        private void Validar(Usuario usuario, bool eLogin)
+         public async Task Atualizar(int id, UsuarioRequest user)
         {
-            var validator = new UsuarioValidator(_usuarioRepository, eLogin);
+            Usuario usuario =_mapper.Map<Usuario>(user);
+            usuario.Id = id;
+            Validar(usuario, UsuarioRequestEnum.Atualizar);
+            await _usuarioRepository.Atualizar(id, usuario);
+        }
+
+        public async Task Deletar(int id)
+        {
+            Usuario usuario =_mapper.Map<Usuario>(id);
+            Validar(usuario, UsuarioRequestEnum.Deletar);
+
+            await _usuarioRepository.Deletar(id);
+        }
+
+        public async Task<List<Usuario>> Listar()
+        {
+            return await _usuarioRepository.Listar();
+        }
+
+        private void Validar(Usuario usuario, UsuarioRequestEnum request)
+        {
+            var validator = new UsuarioValidator(_usuarioRepository, request);
             var validationResult = validator.Validate(usuario);
             if (validationResult.IsValid)
             {
@@ -62,5 +72,7 @@ namespace Fleet.Service
                 throw new BussinessException(errors);
             }
         }
+
+       
     }
 }

@@ -28,13 +28,13 @@ public class AuthService : IAuthService
         _tokenService = tokenService;
         _usuarioRepository = usuarioRepository;
     }
-    public LoginResponse Logar(LoginRequest login)
+    public async Task<LoginResponse> Logar(LoginRequest login)
     {
-        var usuarioBD =  _usuarioRepository.Buscar()
-                            .FirstOrDefault(
-                                x => x.Ativo && x.Email == login.Email && 
-                                CriptografiaHelper.DescriptografarAes(x.Senha, Secret) == login.Senha) ?? 
+        var usuarioBD =  await _usuarioRepository.BuscarEmail(login.Email) ?? 
                                 throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
+        if(!(usuarioBD.Email == login.Email) || !(CriptografiaHelper.DescriptografarAes(usuarioBD.Senha, Secret) == login.Senha))
+            throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
+            
         var token =  _tokenService.GenerateToken(usuarioBD);
 
         var usuarioResponse = _mapper.Map<UsuarioResponse>(usuarioBD);

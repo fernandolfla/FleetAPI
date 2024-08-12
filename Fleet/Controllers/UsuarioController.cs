@@ -56,11 +56,38 @@ namespace Fleet.Controllers
 
         [HttpPost("")]
         [AllowAnonymous]
-        public IActionResult Criar([FromBody] UsuarioRequest usuarioRequest)
+        public async Task<IActionResult> Criar([FromBody] UsuarioRequest usuarioRequest)
         {
-            _usuarioService.Criar(usuarioRequest);
+            await _usuarioService.Criar(usuarioRequest);
 
             return Created();
+        }
+
+        [HttpPut("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Atualizar([FromBody] UsuarioRequest usuarioRequest, [FromRoute] int id)
+        {
+            await _usuarioService.Atualizar(id, usuarioRequest);
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Deletar([FromRoute] int id)
+        {
+            await _usuarioService.Deletar(id);
+
+            return Ok();
+        }
+
+        [HttpGet("")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Listar()
+        {
+            var usuarios = await _usuarioService.Listar();
+
+            return Ok(usuarios);
         }
     }
 }

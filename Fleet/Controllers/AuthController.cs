@@ -19,9 +19,9 @@ namespace Fleet.Controllers
 
         [HttpPost("")]
         [AllowAnonymous]
-        public IActionResult Logar([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> Logar([FromBody] LoginRequest loginRequest)
         {
-            var response =  _authService.Logar(loginRequest); 
+            var response = await _authService.Logar(loginRequest); 
 
             return Ok(response);
         }

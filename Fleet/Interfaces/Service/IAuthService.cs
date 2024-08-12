@@ -7,5 +7,5 @@ namespace Fleet.Interfaces.Service;
 
 public interface IAuthService
 {
-    LoginResponse Logar(LoginRequest login);
+    Task<LoginResponse> Logar(LoginRequest login);
 }

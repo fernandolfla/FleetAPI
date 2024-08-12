@@ -13,30 +13,52 @@ namespace Fleet.Repository
             _context = context;
         }
 
-        public void Criar(Usuario user)
+        public async Task Criar(Usuario user)
         {
-            _context.Usuarios.Add(user);
+            await _context.Usuarios.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Deletar(int id)
+        {
+            _context.Usuarios.Remove( await _context.Usuarios.FindAsync(id));
             _context.SaveChanges();
         }
 
-        public IQueryable<Usuario> Buscar()
+        public async Task Atualizar(int id, Usuario usuarioAtualizado)
         {
-            return _context.Usuarios;
-        }
-
-        public void Deletar(int id)
-        {
-            _context.Usuarios.Remove(_context.Usuarios.Find(id));
-            _context.SaveChanges();
-        }
-
-        public void Atualizar(int id, Usuario usuarioAtualizado)
-        {
-            var usuario = _context.Usuarios.Find(id);
+            var usuario = await _context.Usuarios.FindAsync(id);
             usuario.CPF = usuarioAtualizado.CPF;
             usuario.Name = usuarioAtualizado.Name;
             usuario.Email = usuarioAtualizado.Email;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExisteEmail(string email, int? id = null)
+        {
+            if(id == null)
+                return await _context.Usuarios.AnyAsync(x => x.Email == email);
+            return  await _context.Usuarios.AnyAsync(x => x.Email == email && x.Id == id);
+        }
+
+        public Task<bool> ExisteCpf(string cpf)
+        {
+            return _context.Usuarios.AnyAsync(x => x.CPF == cpf);
+        }
+
+        public async Task<Usuario> BuscarEmail(string email)
+        {
+           return await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<bool> Existe(int id)
+        {
+            return await _context.Usuarios.AnyAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Usuario>> Listar()
+        {
+            return await _context.Usuarios.ToListAsync();
         }
     }
 }

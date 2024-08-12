@@ -5,7 +5,9 @@ namespace Fleet.Interfaces.Service
 {
     public interface IUsuarioService
     {
-        void Criar(UsuarioRequest user);
-        string Logar(string email, string senha);
+        Task Criar(UsuarioRequest user);
+        Task Atualizar(int id, UsuarioRequest user);
+        Task Deletar(int id);
+        Task<List<Usuario>> Listar();
     }
 }
