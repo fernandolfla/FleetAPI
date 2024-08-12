@@ -13,7 +13,6 @@ namespace Fleet.Service
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
@@ -24,7 +23,6 @@ namespace Fleet.Service
                             IMapper mapper)
         {
             _usuarioRepository = usuarioRepository;
-            _tokenService = tokenService;
             _configuration = configuration;
             _mapper = mapper;
         }

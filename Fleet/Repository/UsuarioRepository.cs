@@ -21,8 +21,8 @@ namespace Fleet.Repository
 
         public async Task Deletar(int id)
         {
-            _context.Usuarios.Remove( await _context.Usuarios.FindAsync(id));
-            _context.SaveChanges();
+            _context.Usuarios.Remove(await _context.Usuarios.FindAsync(id));
+            _context.SaveChangesAsync();
         }
 
         public async Task Atualizar(int id, Usuario usuarioAtualizado)
