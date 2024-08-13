@@ -25,7 +25,7 @@ namespace Fleet.Validators
                 RuleFor(x => x.CPF).Must(cpf => IsValidCPF(cpf))
                                 .WithMessage("CPF invalido");
             
-                RuleFor(x => x.CPF).MustAsync(async (cpf,cancellationToken)  => await usuarioRepository.ExisteCpf(cpf))
+                RuleFor(x => x.CPF).MustAsync(async (cpf,cancellationToken)  => !await usuarioRepository.ExisteCpf(cpf))
                                 .WithMessage("CPF ja existe");
 
                 RuleFor(x => x.Email).EmailAddress()
