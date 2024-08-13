@@ -29,7 +29,7 @@ namespace Fleet.Repository
         {
             var usuario = await _context.Usuarios.FindAsync(id);
             usuario.CPF = usuarioAtualizado.CPF;
-            usuario.Name = usuarioAtualizado.Name;
+            usuario.Nome = usuarioAtualizado.Nome;
             usuario.Email = usuarioAtualizado.Email;
             await _context.SaveChangesAsync();
         }

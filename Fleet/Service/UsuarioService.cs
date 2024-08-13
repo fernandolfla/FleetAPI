@@ -7,6 +7,7 @@ using Fleet.Resources;
 using Fleet.Controllers.Model.Request.Usuario;
 using AutoMapper;
 using Fleet.Enums;
+using Fleet.Controllers.Model.Response.Usuario;
 
 namespace Fleet.Service
 {
@@ -50,9 +51,10 @@ namespace Fleet.Service
             await _usuarioRepository.Deletar(id);
         }
 
-        public async Task<List<Usuario>> Listar()
+        public async Task<List<UsuarioResponse>> Listar()
         {
-            return await _usuarioRepository.Listar();
+            var usuarios =  await _usuarioRepository.Listar();
+            return _mapper.Map<List<UsuarioResponse>>(usuarios);
         }
 
         private async Task Validar(Usuario usuario, UsuarioRequestEnum request)

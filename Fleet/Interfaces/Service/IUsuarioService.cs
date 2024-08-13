@@ -1,4 +1,5 @@
 ﻿using Fleet.Controllers.Model.Request.Usuario;
+using Fleet.Controllers.Model.Response.Usuario;
 using Fleet.Models;
 
 namespace Fleet.Interfaces.Service
@@ -8,6 +9,6 @@ namespace Fleet.Interfaces.Service
         Task Criar(UsuarioRequest user);
         Task Atualizar(int id, UsuarioRequest user);
         Task Deletar(int id);
-        Task<List<Usuario>> Listar();
+        Task<List<UsuarioResponse>> Listar();
     }
 }
