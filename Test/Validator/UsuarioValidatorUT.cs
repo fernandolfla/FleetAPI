@@ -29,6 +29,7 @@ public class UsuarioValidatorUT
         var usuario = new Usuario
         {
             Email = "fagner.santos",
+            Nome=Faker.User.Username(),
             Ativo = true,
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "000.000.000-00",
@@ -55,6 +56,7 @@ public class UsuarioValidatorUT
         {
             Email = email,
             Ativo = true,
+            Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "054.214.046-25",
             Papel = PapelEnum.Usuario,
@@ -79,6 +81,7 @@ public class UsuarioValidatorUT
         {
             Email = "fagner.santos",
             Ativo = true,
+            Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "054.214.046-25",
             Papel =PapelEnum.Usuario,
@@ -103,6 +106,7 @@ public class UsuarioValidatorUT
         {
             Email = string.Empty,
             Ativo = true,
+            Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "103.310.849-96",
             Papel = PapelEnum.Usuario,
