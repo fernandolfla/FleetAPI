@@ -1,8 +1,6 @@
 using Fleet.Controllers.Model.Request;
 using Fleet.Interfaces.Service;
-using Fleet.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fleet.Controllers

@@ -30,6 +30,9 @@ namespace Fleet.Validators
 
                 RuleFor(x => x.Email).EmailAddress()
                                  .WithMessage(Resource.usario_emailInvalido);
+                
+                RuleFor(x => x.Nome).NotEmpty()
+                                 .WithMessage("Campo nome obrigatorio");
             }               
         }
         private static bool IsValidCPF(string cpf)

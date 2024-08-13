@@ -18,6 +18,8 @@ namespace Fleet.Repository.Configuration
 
             builder.Property(x => x.Papel).HasMaxLength(255);
 
+             builder.Property(x => x.Nome).HasMaxLength(255).IsRequired();
+
             //builder.Property(x => x.Papel).HasDefaultValue(PapelEnum.Usuario)
             //                              .IsRequired();
         }
