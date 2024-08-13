@@ -1,4 +1,5 @@
 using Fleet.Controllers.Model.Request;
+using Fleet.Controllers.Model.Response.Auth;
 using Fleet.Interfaces.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,8 +20,7 @@ namespace Fleet.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Logar([FromBody] LoginRequest loginRequest)
         {
-            var response = await _authService.Logar(loginRequest); 
-
+            LoginResponse response = await _authService.Logar(loginRequest);
             return Ok(response);
         }
     }

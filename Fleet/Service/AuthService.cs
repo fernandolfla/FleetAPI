@@ -32,14 +32,14 @@ public class AuthService : IAuthService
     {
         var usuarioBD =  await _usuarioRepository.BuscarEmail(login.Email) ?? 
                                 throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
+                                
         if(!(usuarioBD.Email == login.Email) || !(CriptografiaHelper.DescriptografarAes(usuarioBD.Senha, Secret) == login.Senha))
             throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
             
         var token =  _tokenService.GenerateToken(usuarioBD);
 
         var usuarioResponse = _mapper.Map<UsuarioResponse>(usuarioBD);
-        LoginResponse response = new(usuarioResponse, token);
         
-        return response;
+        return new LoginResponse(usuarioResponse, token);
     }
 }
