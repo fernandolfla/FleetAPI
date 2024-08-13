@@ -15,22 +15,9 @@ namespace Fleet.Controllers
             _usuarioService = usuarioService;
         }
 
-
         [HttpPost("[Action]")]
         [AllowAnonymous]
-        public IActionResult Recuperar([FromBody] string email)  //recebe um e-mail, verifica se ele existe na base, manda código para validar
-        {
-            
-            return Ok(new
-            {
-                email = "Recuperado",  //Iniciar
-                
-            });
-        }
-
-        [HttpPost("[Action]")]
-        [AllowAnonymous]
-        public IActionResult ConfirmarCodigo([FromBody] string email, string codigo)  //Recebe e-mail e código para resetar a senha
+        public IActionResult EsqueceuSenha([FromBody] string email, string codigo)  //Recebe e-mail e código para resetar a senha
         {
 
             return Ok(new

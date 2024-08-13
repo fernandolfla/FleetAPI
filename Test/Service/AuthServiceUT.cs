@@ -1,0 +1,69 @@
+using AutoMapper;
+using Bogus;
+using Fleet.Controllers.Model.Request;
+using Fleet.Controllers.Model.Request.Usuario;
+using Fleet.Controllers.Model.Response.Auth;
+using Fleet.Helpers;
+using Fleet.Interfaces.Repository;
+using Fleet.Interfaces.Service;
+using Fleet.Mapper;
+using Fleet.Models;
+using Fleet.Service;
+using Microsoft.Extensions.Configuration;
+using Moq;
+
+
+namespace Test.Service;
+
+public class AuthServiceUT
+{
+    private Mock<IUsuarioRepository> _usuarioRepository;
+    private IAuthService _service;
+    private ITokenService _tokenService;
+    private IConfiguration _configuration;
+    private IMapper _mapper;
+
+    public AuthServiceUT()
+    {
+        _usuarioRepository = new Mock<IUsuarioRepository>();
+
+        var inMemorySettings = new Dictionary<string, string> {{ "Crypto:Secret", "fikra!123" },  { "Authorization:Secret", "bG9uZzBzZWNyZXQ4Zm9ySmN0U0czNDU2cG9zdA==" } };
+
+        _configuration = new ConfigurationBuilder()
+                            .AddInMemoryCollection(inMemorySettings)
+                            .Build();
+        var mappingConfig = new MapperConfiguration( mc => mc.AddProfile(new Mapping()));
+        _mapper = mappingConfig.CreateMapper();
+        _tokenService = new TokenService(_configuration);
+        _service = new AuthService(_usuarioRepository.Object, _tokenService , _mapper, _configuration);
+    }
+
+    [Fact]
+    public async Task Retorna_Login()
+    {
+        var cpf = "111.111.111-02";
+        var email = Faker.User.Email();
+        var name = Faker.User.Username();
+        var password = Faker.User.Password();
+
+        var login = new LoginRequest{
+            Email = email,
+            Senha = password
+        };
+
+        var usuario = new Usuario{
+            Id= Faker.Number.RandomNumber(1,int.MaxValue),
+            CPF= cpf,
+            Email= email,
+            Nome= name,
+            Senha = CriptografiaHelper.CriptografarAes(password, _configuration.GetValue<string>("Crypto:Secret")) ?? string.Empty
+        };
+
+        _usuarioRepository.Setup(x => x.BuscarEmail(email))
+                                .ReturnsAsync(usuario);
+
+        LoginResponse response = await _service.Logar(login);                        
+
+        Assert.IsType<LoginResponse>(response);
+    }
+}

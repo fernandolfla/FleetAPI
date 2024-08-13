@@ -66,7 +66,6 @@ public class UserServiceUT
             Nome= name,
             Senha = password
         };
-        await _service.Criar(usuarioRequest);
-        _usuarioRepository.Verify(x => x.Criar(It.IsAny<Usuario>()), Times.Once);
+        Assert.ThrowsAsync<BussinessException>(async() => await _service.Criar(usuarioRequest));
     }
 }

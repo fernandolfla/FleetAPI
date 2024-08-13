@@ -108,7 +108,7 @@ public class UsuarioValidatorUT
             Ativo = true,
             Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
-            CPF = "103.310.849-96",
+            CPF = "054.214.046-25",
             Papel = PapelEnum.Usuario,
             Senha = "Senha123!"
         };

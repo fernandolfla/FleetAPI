@@ -3,14 +3,9 @@ using Fleet.Controllers.Model.Response.Usuario;
 
 namespace Fleet.Controllers.Model.Response.Auth;
 
-public class LoginResponse
+public class LoginResponse(UsuarioResponse usuario , string token)
 {
-    protected UsuarioResponse usuario {get; private set;}
-    protected string token { get; private set;}
-    public LoginResponse(UsuarioResponse usuario, string token)
-    {
-        this.usuario = usuario;
-        this.token = token;
-    }
-   
+    public UsuarioResponse usuario { get; set; } = usuario;
+    public string token { get; set; }  = token;
+
 }
