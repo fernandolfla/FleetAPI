@@ -30,7 +30,7 @@ namespace Fleet.Service
         public async Task Criar(UsuarioRequest user)
         {
             Usuario usuario =_mapper.Map<Usuario>(user);
-            Validar(usuario, UsuarioRequestEnum.Criar);
+            await Validar(usuario, UsuarioRequestEnum.Criar);
 
             await _usuarioRepository.Criar(usuario);
         }
@@ -39,14 +39,14 @@ namespace Fleet.Service
         {
             Usuario usuario =_mapper.Map<Usuario>(user);
             usuario.Id = id;
-            Validar(usuario, UsuarioRequestEnum.Atualizar);
+            await Validar(usuario, UsuarioRequestEnum.Atualizar);
             await _usuarioRepository.Atualizar(id, usuario);
         }
 
         public async Task Deletar(int id)
         {
             Usuario usuario =_mapper.Map<Usuario>(id);
-            Validar(usuario, UsuarioRequestEnum.Deletar);
+            await Validar(usuario, UsuarioRequestEnum.Deletar);
 
             await _usuarioRepository.Deletar(id);
         }
