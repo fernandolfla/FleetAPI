@@ -4,47 +4,61 @@ using Fleet.Interfaces.Service;
 using Fleet.Models;
 using Fleet.Validators;
 using Fleet.Resources;
+using Fleet.Controllers.Model.Request.Usuario;
+using AutoMapper;
+using Fleet.Enums;
 
 namespace Fleet.Service
 {
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
+        private string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
 
-        public string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
-
-        public UsuarioService(IUsuarioRepository usuarioRepository, ITokenService tokenService, IConfiguration configuration)
+        public UsuarioService(IUsuarioRepository usuarioRepository,
+                            IConfiguration configuration,
+                            IMapper mapper)
         {
             _usuarioRepository = usuarioRepository;
-            _tokenService = tokenService;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
-        public string Logar(string email, string senha)
+        public async Task Criar(UsuarioRequest user)
         {
-            var usuario = new Usuario { Email = email, Senha = senha };
-            Validar(usuario, true);
+            Usuario usuario =_mapper.Map<Usuario>(user);
+            Validar(usuario, UsuarioRequestEnum.Criar);
 
-            var usuarioBD = _usuarioRepository.Buscar().FirstOrDefault(x => x.Ativo && x.Email == usuario.Email && x.Senha == usuario.Senha);
-            if (usuarioBD == null)
-                throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
-
-            return _tokenService.GenerateToken(usuarioBD);
+            await _usuarioRepository.Criar(usuario);
         }
 
-        public void Criar(Usuario user)
+         public async Task Atualizar(int id, UsuarioRequest user)
         {
-            Validar(user, false);
-
-            _usuarioRepository.Criar(user);
+            Usuario usuario =_mapper.Map<Usuario>(user);
+            usuario.Id = id;
+            Validar(usuario, UsuarioRequestEnum.Atualizar);
+            await _usuarioRepository.Atualizar(id, usuario);
         }
 
-        private void Validar(Usuario usuario, bool eLogin)
+        public async Task Deletar(int id)
         {
-            var validator = new UsuarioValidator(_usuarioRepository, eLogin);
-            var validationResult = validator.Validate(usuario);
+            Usuario usuario =_mapper.Map<Usuario>(id);
+            Validar(usuario, UsuarioRequestEnum.Deletar);
+
+            await _usuarioRepository.Deletar(id);
+        }
+
+        public async Task<List<Usuario>> Listar()
+        {
+            return await _usuarioRepository.Listar();
+        }
+
+        private async Task Validar(Usuario usuario, UsuarioRequestEnum request)
+        {
+            var validator = new UsuarioValidator(_usuarioRepository, request);
+            var validationResult = await validator.ValidateAsync(usuario);
             if (validationResult.IsValid)
             {
                 usuario.Senha = CriptografiaHelper.CriptografarAes(usuario.Senha, Secret) ?? throw new BussinessException(Resource.usuario_falhaCriptografia);
@@ -55,5 +69,7 @@ namespace Fleet.Service
                 throw new BussinessException(errors);
             }
         }
+
+       
     }
 }
