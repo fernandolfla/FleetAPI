@@ -30,15 +30,21 @@ public class AuthService : IAuthService
     }
     public async Task<LoginResponse> Logar(LoginRequest login)
     {
-        var usuarioBD =  await _usuarioRepository.BuscarEmail(login.Email) ?? 
+        var usuario =  await _usuarioRepository.BuscarEmail(login.Email) ?? 
                                 throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
                                 
-        if(!(usuarioBD.Email == login.Email) || !(CriptografiaHelper.DescriptografarAes(usuarioBD.Senha, Secret) == login.Senha))
+        if(!(usuario.Email == login.Email) || !(CriptografiaHelper.DescriptografarAes(usuario.Senha, Secret) == login.Senha))
             throw new UnauthorizedAccessException(Resource.usuario_emailSenhaInvalido);
             
-        var token =  _tokenService.GenerateToken(usuarioBD);
+        var token =  _tokenService.GenerateToken(usuario);
 
-        var usuarioResponse = _mapper.Map<UsuarioResponse>(usuarioBD);
+        var usuarioResponse = new UsuarioResponse(
+                                    CriptografiaHelper.CriptografarAes(usuario.Id.ToString(), Secret), 
+                                    usuario.Nome, 
+                                    usuario.CPF, 
+                                    usuario.Email, 
+                                    usuario.UrlImagem, 
+                                    usuario.Papel);
         
         return new LoginResponse(usuarioResponse, token);
     }

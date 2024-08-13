@@ -52,7 +52,7 @@ namespace Fleet.Controllers
 
         [HttpPut("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Atualizar([FromBody] UsuarioRequest usuarioRequest, [FromRoute] int id)
+        public async Task<IActionResult> Atualizar([FromBody] UsuarioRequest usuarioRequest, [FromRoute] string id)
         {
             await _usuarioService.Atualizar(id, usuarioRequest);
 
@@ -61,7 +61,7 @@ namespace Fleet.Controllers
 
         [HttpDelete("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Deletar([FromRoute] int id)
+        public async Task<IActionResult> Deletar([FromRoute] string id)
         {
             await _usuarioService.Deletar(id);
 
