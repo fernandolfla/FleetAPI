@@ -18,7 +18,6 @@ namespace Fleet.Service
         private string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
 
         public UsuarioService(IUsuarioRepository usuarioRepository,
-                            ITokenService tokenService,
                             IConfiguration configuration,
                             IMapper mapper)
         {
@@ -56,10 +55,10 @@ namespace Fleet.Service
             return await _usuarioRepository.Listar();
         }
 
-        private void Validar(Usuario usuario, UsuarioRequestEnum request)
+        private async Task Validar(Usuario usuario, UsuarioRequestEnum request)
         {
             var validator = new UsuarioValidator(_usuarioRepository, request);
-            var validationResult = validator.Validate(usuario);
+            var validationResult = await validator.ValidateAsync(usuario);
             if (validationResult.IsValid)
             {
                 usuario.Senha = CriptografiaHelper.CriptografarAes(usuario.Senha, Secret) ?? throw new BussinessException(Resource.usuario_falhaCriptografia);

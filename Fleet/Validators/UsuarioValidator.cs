@@ -3,6 +3,7 @@ using Fleet.Models;
 using FluentValidation;
 using Fleet.Resources;
 using Fleet.Enums;
+using System.Text.RegularExpressions;
 
 
 namespace Fleet.Validators
@@ -18,68 +19,67 @@ namespace Fleet.Validators
                 RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) => await usuarioRepository.Existe(id))
                                 .WithMessage("Usuario nao existe");
                 if(request == UsuarioRequestEnum.Atualizar)
-                    RuleFor(x => x.Email).MustAsync(async (email, cancellationToken) => !await usuarioRepository.ExisteEmail(email))
+                    RuleFor(x => x).MustAsync(async (x, cancellationToken) => !await usuarioRepository.ExisteEmail(x.Email, x.Id))
                                         .WithMessage(Resource.usuario_emailduplicado);
             if(request != UsuarioRequestEnum.Deletar) {
-                RuleFor(x => x.CPF).Must(IsValidCPF)
+                RuleFor(x => x.CPF).Must(cpf => IsValidCPF(cpf))
                                 .WithMessage("CPF invalido");
             
                 RuleFor(x => x.CPF).MustAsync(async (cpf,cancellationToken)  => await usuarioRepository.ExisteCpf(cpf))
                                 .WithMessage("CPF ja existe");
+
+                RuleFor(x => x.Email).EmailAddress()
+                                 .WithMessage(Resource.usario_emailInvalido);
             }               
         }
         private static bool IsValidCPF(string cpf)
         {
-            cpf = cpf.Replace(".", "").Replace("-", "");
 
-            if (cpf.Length != 11 || !long.TryParse(cpf, out _))
-            {
+            if (string.IsNullOrWhiteSpace(cpf))
+            return false;
+
+            // Remove non-numeric characters
+            cpf = Regex.Replace(cpf, "[^0-9]", string.Empty);
+
+            if (cpf.Length != 11)
                 return false;
-            }
 
-            int[] multipliers1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-            int[] multipliers2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-
-            string tempCpf = cpf.Substring(0, 9);
-            int sum = 0;
-
-            for (int i = 0; i < 9; i++)
+            // Invalid CPFs (e.g., 111.111.111-11)
+            string[] invalidCpfs =
             {
-                sum += int.Parse(tempCpf[i].ToString()) * multipliers1[i];
-            }
+                "00000000000", "11111111111", "22222222222", "33333333333",
+                "44444444444", "55555555555", "66666666666", "77777777777",
+                "88888888888", "99999999999"
+            };
+
+            if (invalidCpfs.Contains(cpf))
+                return false;
+
+            // Calculating the first digit
+            int[] multipliers1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int sum = 0;
+            for (int i = 0; i < 9; i++)
+                sum += int.Parse(cpf[i].ToString()) * multipliers1[i];
 
             int remainder = sum % 11;
-            if (remainder < 2)
-            {
-                remainder = 0;
-            }
-            else
-            {
-                remainder = 11 - remainder;
-            }
+            int firstDigit = remainder < 2 ? 0 : 11 - remainder;
 
-            string digit = remainder.ToString();
-            tempCpf += digit;
+            if (int.Parse(cpf[9].ToString()) != firstDigit)
+                return false;
+
+            // Calculating the second digit
+            int[] multipliers2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             sum = 0;
-
             for (int i = 0; i < 10; i++)
-            {
-                sum += int.Parse(tempCpf[i].ToString()) * multipliers2[i];
-            }
+                sum += int.Parse(cpf[i].ToString()) * multipliers2[i];
 
             remainder = sum % 11;
-            if (remainder < 2)
-            {
-                remainder = 0;
-            }
-            else
-            {
-                remainder = 11 - remainder;
-            }
+            int secondDigit = remainder < 2 ? 0 : 11 - remainder;
 
-            digit += remainder.ToString();
+            if (int.Parse(cpf[10].ToString()) != secondDigit)
+                return false;
 
-            return cpf.EndsWith(digit);
+            return true;
         }
     }
 }
