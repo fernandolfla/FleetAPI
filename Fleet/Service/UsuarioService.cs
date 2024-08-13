@@ -45,7 +45,9 @@ namespace Fleet.Service
 
         public async Task Deletar(int id)
         {
-            Usuario usuario =_mapper.Map<Usuario>(id);
+            var usuario = new Usuario {
+                Id = id
+            };
             await Validar(usuario, UsuarioRequestEnum.Deletar);
 
             await _usuarioRepository.Deletar(id);
