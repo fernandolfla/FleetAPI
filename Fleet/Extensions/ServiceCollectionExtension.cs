@@ -41,6 +41,8 @@ namespace Fleet.Extensions
             services.AddScoped<IUsuarioService, UsuarioService>();
 
             services.AddSingleton<ITokenService, TokenService>();
+
+            services.AddScoped<IAuthService, AuthService>();
         }
 
         /// <summary>
