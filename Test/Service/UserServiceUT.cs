@@ -43,7 +43,7 @@ public class UserServiceUT
         var usuarioRequest = new UsuarioRequest{
             CPF= cpf,
             Email= email,
-            Name= name,
+            Nome= name,
             Senha = password
         };
 
@@ -63,7 +63,7 @@ public class UserServiceUT
         var usuarioRequest = new UsuarioRequest{
             CPF= cpf,
             Email= email,
-            Name= name,
+            Nome= name,
             Senha = password
         };
         await _service.Criar(usuarioRequest);
