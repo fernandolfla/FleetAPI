@@ -6,7 +6,7 @@ namespace Fleet.Interfaces.Repository
     {
         Task Criar(Usuario user);
         Task<bool> ExisteEmail(string email, int? id = null);
-        Task<bool> ExisteCpf(string cpf);
+        Task<bool> ExisteCpf(string cpf, int? id = null);
         Task Deletar(int id);
         Task Atualizar(int id, Usuario usuarioAtualizado);
         Task<Usuario> BuscarEmail(string email);

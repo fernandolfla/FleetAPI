@@ -12,22 +12,31 @@ namespace Fleet.Validators
     {
         public UsuarioValidator(IUsuarioRepository usuarioRepository, UsuarioRequestEnum request)
         {   
-            if(request == UsuarioRequestEnum.Criar)
+            if(request == UsuarioRequestEnum.Criar) {
                 RuleFor(x => x.Email).MustAsync(async (email, cancellationToken) => !await usuarioRepository.ExisteEmail(email))
                                      .WithMessage(Resource.usuario_emailduplicado);
-            if(request != UsuarioRequestEnum.Criar)
+                RuleFor(x => x.CPF).MustAsync(async (cpf,cancellationToken)  => await usuarioRepository.ExisteCpf(cpf))
+                                .WithMessage("CPF ja existe");
+            }
+               
+
+            if(request != UsuarioRequestEnum.Criar) {
                 RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) => await usuarioRepository.Existe(id))
                                 .WithMessage("Usuario nao existe");
-                if(request == UsuarioRequestEnum.Atualizar)
+                if(request == UsuarioRequestEnum.Atualizar) {
                     RuleFor(x => x).MustAsync(async (x, cancellationToken) => !await usuarioRepository.ExisteEmail(x.Email, x.Id))
                                         .WithMessage(Resource.usuario_emailduplicado);
+                    RuleFor(x => x).MustAsync(async (x,cancellationToken)  => await usuarioRepository.ExisteCpf(x.CPF, x.Id))
+                                .WithMessage("CPF ja existe");
+                }
+            }
+ 
+                   
             if(request != UsuarioRequestEnum.Deletar) {
                 RuleFor(x => x.CPF).Must(cpf => IsValidCPF(cpf))
                                 .WithMessage("CPF invalido");
             
-                RuleFor(x => x.CPF).MustAsync(async (cpf,cancellationToken)  => await usuarioRepository.ExisteCpf(cpf))
-                                .WithMessage("CPF ja existe");
-
+               
                 RuleFor(x => x.Email).EmailAddress()
                                  .WithMessage(Resource.usario_emailInvalido);
                 

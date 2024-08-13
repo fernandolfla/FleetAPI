@@ -38,12 +38,14 @@ namespace Fleet.Repository
         {
             if(id == null)
                 return await _context.Usuarios.AnyAsync(x => x.Email == email);
-            return  await _context.Usuarios.AnyAsync(x => x.Email == email && x.Id == id);
+            return  await _context.Usuarios.AnyAsync(x => x.Email == email && x.Id != id);
         }
 
-        public Task<bool> ExisteCpf(string cpf)
+        public async Task<bool> ExisteCpf(string cpf, int? id = null)
         {
-            return _context.Usuarios.AnyAsync(x => x.CPF == cpf);
+            if(id == null)
+                return await  _context.Usuarios.AnyAsync(x => x.CPF == cpf);
+            return  await _context.Usuarios.AnyAsync(x => x.CPF == cpf && x.Id != id);
         }
 
         public async Task<Usuario> BuscarEmail(string email)
