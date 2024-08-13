@@ -35,28 +35,40 @@ namespace Fleet.Service
             await _usuarioRepository.Criar(usuario);
         }
 
-         public async Task Atualizar(int id, UsuarioRequest user)
+         public async Task Atualizar(string id, UsuarioRequest user)
         {
             Usuario usuario =_mapper.Map<Usuario>(user);
-            usuario.Id = id;
+            usuario.Id = int.Parse(CriptografiaHelper.DescriptografarAes(id, Secret));
             await Validar(usuario, UsuarioRequestEnum.Atualizar);
-            await _usuarioRepository.Atualizar(id, usuario);
+            await _usuarioRepository.Atualizar(usuario.Id, usuario);
         }
 
-        public async Task Deletar(int id)
+        public async Task Deletar(string id)
         {
             var usuario = new Usuario {
-                Id = id
+                Id = int.Parse(CriptografiaHelper.DescriptografarAes(id, Secret))
             };
             await Validar(usuario, UsuarioRequestEnum.Deletar);
 
-            await _usuarioRepository.Deletar(id);
+            await _usuarioRepository.Deletar(usuario.Id);
         }
 
         public async Task<List<UsuarioResponse>> Listar()
         {
             var usuarios =  await _usuarioRepository.Listar();
-            return _mapper.Map<List<UsuarioResponse>>(usuarios);
+
+            List<UsuarioResponse> usuariosResponse = [];
+
+            foreach(var usuario in usuarios) {
+                usuariosResponse.Add(new UsuarioResponse(
+                                    CriptografiaHelper.CriptografarAes(usuario.Id.ToString(), Secret), 
+                                    usuario.Nome, 
+                                    usuario.CPF, 
+                                    usuario.Email, 
+                                    usuario.UrlImagem, 
+                                    usuario.Papel));
+            }
+            return usuariosResponse;
         }
 
         private async Task Validar(Usuario usuario, UsuarioRequestEnum request)
