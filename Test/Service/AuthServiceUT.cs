@@ -1,5 +1,6 @@
 using AutoMapper;
 using Bogus;
+using Faker;
 using Fleet.Controllers.Model.Request;
 using Fleet.Controllers.Model.Request.Auth;
 using Fleet.Controllers.Model.Response.Auth;
@@ -11,6 +12,7 @@ using Fleet.Models;
 using Fleet.Service;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using System.Linq.Expressions;
 
 
 namespace Test.Service;
@@ -21,7 +23,7 @@ public class AuthServiceUT
     private IAuthService _service;
     private ITokenService _tokenService;
     private IConfiguration _configuration;
-    private IEmailService _emailService;
+    private Mock<IEmailService> _emailService;
     public AuthServiceUT()
     {
         _usuarioRepository = new Mock<IUsuarioRepository>();
@@ -37,9 +39,9 @@ public class AuthServiceUT
                             .AddInMemoryCollection(inMemorySettings)
                             .Build();
         var mappingConfig = new MapperConfiguration( mc => mc.AddProfile(new Mapping()));
-        _emailService = new EmailService(_configuration);
+        _emailService = new Mock<IEmailService>();
         _tokenService = new TokenService(_configuration);
-        _service = new AuthService(_usuarioRepository.Object, _tokenService, _configuration, _emailService);
+        _service = new AuthService(_usuarioRepository.Object, _tokenService, _configuration, _emailService.Object);
     }
 
     [Fact]
@@ -63,7 +65,7 @@ public class AuthServiceUT
             Senha = CriptografiaHelper.CriptografarAes(password, _configuration.GetValue<string>("Crypto:Secret")) ?? string.Empty
         };
 
-        _usuarioRepository.Setup(x => x.BuscarEmail(email))
+        _usuarioRepository.Setup(x => x.Buscar(It.IsAny<Expression<Func<Usuario,bool>>>()))
                                 .ReturnsAsync(usuario);
 
         LoginResponse response = await _service.Logar(login);                        
@@ -85,12 +87,15 @@ public class AuthServiceUT
         _usuarioRepository.Setup(x => x.ExisteEmail(esqueceuSenhaRequest.Email, null))
                                 .ReturnsAsync(true);
 
-        _usuarioRepository.Setup(x => x.BuscarEmail(esqueceuSenhaRequest.Email))
+        _usuarioRepository.Setup(x => x.Buscar(x => x.Email == esqueceuSenhaRequest.Email))
                                 .ReturnsAsync(usuario);
 
-        var codigo = await _service.EsqueceuSenha(esqueceuSenhaRequest);
+        _emailService.Setup(x => x.EnviarEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+
+        var response = await _service.EsqueceuSenha(esqueceuSenhaRequest);
        
-        Assert.IsType<string>(codigo);
-        Assert.NotEmpty(codigo);
+        Assert.IsType<EsqueceuSenhaResponse>(response);
+        Assert.NotEmpty(response.Codigo);
+        Assert.NotEmpty(response.Token);
     }
 }

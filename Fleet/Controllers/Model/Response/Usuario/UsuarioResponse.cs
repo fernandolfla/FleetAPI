@@ -1,7 +1,3 @@
-using System;
-using Fleet.Enums;
-using Fleet.Helpers;
-
 namespace Fleet.Controllers.Model.Response.Usuario;
 
 public class UsuarioResponse
@@ -11,16 +7,14 @@ public class UsuarioResponse
     public string CPF { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string UrlImagem { get; set; } = string.Empty;
-    public PapelEnum Papel { get; set; }
 
-    public UsuarioResponse(string Id, string Nome, string CPF, string Email, string UrlImagem, PapelEnum Papel )
+    public UsuarioResponse(string Id, string Nome, string CPF, string Email, string UrlImagem )
     {
         this.Id = Id;
         this.CPF = CPF;
         this.Email = Email;
         this.Nome = Nome;
         this.UrlImagem = UrlImagem;
-        this.Papel = Papel;
     }
     
 }

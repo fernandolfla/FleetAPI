@@ -25,15 +25,24 @@ namespace Fleet.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Recebe e-mail e código para resetar a senha
+        /// </summary>
         [HttpPost("[Action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> EsqueceuSenha([FromBody] EsqueceuSenhaRequest request)  //Recebe e-mail e código para resetar a senha
+        public async Task<IActionResult> EsqueceuSenha([FromBody] EsqueceuSenhaRequest request) 
         {
             var response = await _authService.EsqueceuSenha(request);
-            return Ok(new
-            {
-                codigo = response,
-            });
+            return Ok(response);
+        }
+
+
+        [HttpPost("[Action]/{token}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetarSenha([FromBody] AtualizarSenhaRequest request, string token) 
+        {
+            await _authService.AlterarSenha(token,request.Senha);
+            return Ok();
         }
     }
 }
