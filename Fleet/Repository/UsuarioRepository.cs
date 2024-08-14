@@ -62,5 +62,12 @@ namespace Fleet.Repository
         {
             return await _context.Usuarios.ToListAsync();
         }
+
+        public async  Task AtualizarSenha(Usuario novaSenha)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == novaSenha.Email);
+            usuario.Senha = novaSenha.Senha;
+            await _context.SaveChangesAsync();
+        }
     }
 }

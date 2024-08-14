@@ -12,5 +12,6 @@ namespace Fleet.Interfaces.Repository
         Task<Usuario> BuscarEmail(string email);
         Task<bool> Existe(int id);
         Task<List<Usuario>> Listar();
+        Task AtualizarSenha(Usuario novaSenha);
     }
 }

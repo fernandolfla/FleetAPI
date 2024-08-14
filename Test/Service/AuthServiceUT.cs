@@ -1,7 +1,7 @@
 using AutoMapper;
 using Bogus;
 using Fleet.Controllers.Model.Request;
-using Fleet.Controllers.Model.Request.Usuario;
+using Fleet.Controllers.Model.Request.Auth;
 using Fleet.Controllers.Model.Response.Auth;
 using Fleet.Helpers;
 using Fleet.Interfaces.Repository;
@@ -21,27 +21,31 @@ public class AuthServiceUT
     private IAuthService _service;
     private ITokenService _tokenService;
     private IConfiguration _configuration;
-    private IMapper _mapper;
-
+    private IEmailService _emailService;
     public AuthServiceUT()
     {
         _usuarioRepository = new Mock<IUsuarioRepository>();
 
-        var inMemorySettings = new Dictionary<string, string> {{ "Crypto:Secret", "fikra!123" },  { "Authorization:Secret", "bG9uZzBzZWNyZXQ4Zm9ySmN0U0czNDU2cG9zdA==" } };
+        var inMemorySettings = new Dictionary<string, string> {{ "Crypto:Secret", "fikra!123" }, 
+                                                                { "Authorization:Secret", "bG9uZzBzZWNyZXQ4Zm9ySmN0U0czNDU2cG9zdA==" },
+                                                                { "Credentials:Email_Envio", "contato@fikra.com.br" },
+                                                                { "Credentials:Email_Servidor", "mail.fikra.com.br" },
+                                                                { "Credentials:Email_Porta", "587" },
+                                                                { "Credentials:Email_Senha", "b.9h;w[}7Z=(" }, };
 
         _configuration = new ConfigurationBuilder()
                             .AddInMemoryCollection(inMemorySettings)
                             .Build();
         var mappingConfig = new MapperConfiguration( mc => mc.AddProfile(new Mapping()));
-        _mapper = mappingConfig.CreateMapper();
+        _emailService = new EmailService(_configuration);
         _tokenService = new TokenService(_configuration);
-        _service = new AuthService(_usuarioRepository.Object, _tokenService , _mapper, _configuration);
+        _service = new AuthService(_usuarioRepository.Object, _tokenService, _configuration, _emailService);
     }
 
     [Fact]
     public async Task Retorna_Login()
     {
-        var cpf = "111.111.111-02";
+        var cpf = "103.310.849-96";
         var email = Faker.User.Email();
         var name = Faker.User.Username();
         var password = Faker.User.Password();
@@ -65,5 +69,28 @@ public class AuthServiceUT
         LoginResponse response = await _service.Logar(login);                        
 
         Assert.IsType<LoginResponse>(response);
+    }
+
+    [Fact]
+    public async Task Esqueceu_Senha_Sucesso()
+    {
+        var esqueceuSenhaRequest = new EsqueceuSenhaRequest {
+            Email = "vitorfidelissantos@gmail.com",
+        };
+        
+        var usuario = new Usuario {
+            Nome = "Vitor Hugo",
+        };
+
+        _usuarioRepository.Setup(x => x.ExisteEmail(esqueceuSenhaRequest.Email, null))
+                                .ReturnsAsync(true);
+
+        _usuarioRepository.Setup(x => x.BuscarEmail(esqueceuSenhaRequest.Email))
+                                .ReturnsAsync(usuario);
+
+        var codigo = await _service.EsqueceuSenha(esqueceuSenhaRequest);
+       
+        Assert.IsType<string>(codigo);
+        Assert.NotEmpty(codigo);
     }
 }
