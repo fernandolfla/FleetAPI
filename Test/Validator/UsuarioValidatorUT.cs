@@ -28,7 +28,7 @@ public class UsuarioValidatorUT
         var validator = new UsuarioValidator(usuarioRepositoryMock.Object, UsuarioRequestEnum.Criar);
         var usuario = new Usuario
         {
-            Email = "fagner.santos",
+            Email = "teste@gmail.com",
             Nome=Faker.User.Username(),
             Ativo = true,
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
@@ -36,7 +36,6 @@ public class UsuarioValidatorUT
             Papel =PapelEnum.Usuario,
             Senha = "Senha123!"
         };
-
         //Act
         var validadorUsuario = await validator.ValidateAsync(usuario);
 
@@ -50,7 +49,7 @@ public class UsuarioValidatorUT
     public async Task UsuarioValidator_Validar_EmailDuplicado()
     {
         var validator = new UsuarioValidator(usuarioRepositoryMock.Object, UsuarioRequestEnum.Criar);
-        var email = Faker.User.Email();
+        var email = "teste@gmail.com";
         //Arrange
         var usuario = new Usuario
         {
@@ -62,7 +61,7 @@ public class UsuarioValidatorUT
             Papel = PapelEnum.Usuario,
             Senha = "Senha123!"
         };
-        usuarioRepositoryMock.Setup( x => x.ExisteEmail(email, null))
+        usuarioRepositoryMock.Setup( x => x.ExisteEmail(usuario.Email, null))
                                 .ReturnsAsync(true);
 
         //Act
@@ -79,7 +78,7 @@ public class UsuarioValidatorUT
         var validator = new UsuarioValidator(usuarioRepositoryMock.Object, UsuarioRequestEnum.Criar);
         var usuario = new Usuario
         {
-            Email = "fagner.santos",
+            Email = "testemail.com",
             Ativo = true,
             Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),

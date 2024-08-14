@@ -6,5 +6,6 @@ public enum UsuarioRequestEnum
 {
     Criar,
     Deletar,
-    Atualizar
+    Atualizar,
+    AtualizarSenha
 }

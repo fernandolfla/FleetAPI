@@ -1,12 +1,14 @@
-using System;
-using AutoMapper;
+
 using Fleet.Controllers.Model.Request;
+using Fleet.Controllers.Model.Request.Auth;
 using Fleet.Controllers.Model.Response.Auth;
 using Fleet.Controllers.Model.Response.Usuario;
 using Fleet.Helpers;
 using Fleet.Interfaces.Repository;
 using Fleet.Interfaces.Service;
+using Fleet.Models;
 using Fleet.Resources;
+using Fleet.Validators;
 
 namespace Fleet.Service;
 
@@ -14,19 +16,19 @@ public class AuthService : IAuthService
 {
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITokenService _tokenService;
-    private readonly IMapper _mapper;
     private readonly IConfiguration _configuration;
     private string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
+    private readonly IEmailService _emailService;
 
     public AuthService(IUsuarioRepository usuarioRepository,
                         ITokenService tokenService,
-                        IMapper mapper,
-                         IConfiguration configuration)
+                        IConfiguration configuration,
+                        IEmailService emailService)
     {
         _configuration = configuration;
-        _mapper = mapper;
         _tokenService = tokenService;
         _usuarioRepository = usuarioRepository;
+        _emailService = emailService;
     }
     public async Task<LoginResponse> Logar(LoginRequest login)
     {
@@ -47,5 +49,27 @@ public class AuthService : IAuthService
                                     usuario.Papel);
         
         return new LoginResponse(usuarioResponse, token);
+    }
+
+    public async Task<string> EsqueceuSenha(EsqueceuSenhaRequest request)
+    {
+        await Validar(request);
+        Random random = new();
+        int randomNumber = random.Next(0, 10000); 
+        string codigo = randomNumber.ToString("D4");
+        var usuario = await _usuarioRepository.BuscarEmail(request.Email);
+        await _emailService.EnviarEmail(request.Email, usuario.Nome, "Recuperação de senha", codigo);
+        return codigo;
+    }
+
+    private async Task Validar(EsqueceuSenhaRequest request)
+    {
+        var validator = new AuthValidator(_usuarioRepository);
+        var validationResult = await validator.ValidateAsync(request);
+        if (!validationResult.IsValid)
+        {
+            var errors = string.Join(";", validationResult.Errors.Select(x => x.ErrorMessage));
+            throw new BussinessException(errors);
+        }
     }
 }

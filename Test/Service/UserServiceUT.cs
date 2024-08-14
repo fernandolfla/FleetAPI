@@ -36,7 +36,7 @@ public class UserServiceUT
     public async Task Criar_Usuario_Sucesso()
     {
         var cpf = "054.214.046-25";
-        var email = Faker.User.Email();
+        var email = "teste@email.com";
         var name = Faker.User.Username();
         var password = Faker.User.Password();
         var criptoPassword = CriptografiaHelper.CriptografarAes(password, "fleet123!@#");

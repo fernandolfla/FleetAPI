@@ -71,6 +71,17 @@ namespace Fleet.Service
             return usuariosResponse;
         }
 
+        public async Task AlterarSenha(string email, string novaSenha)
+        {
+            var usuario = new Usuario {
+                Email = email,
+                Senha = novaSenha
+            };
+
+            await Validar(usuario, UsuarioRequestEnum.AtualizarSenha);
+            await _usuarioRepository.AtualizarSenha(usuario);
+        }
+
         private async Task Validar(Usuario usuario, UsuarioRequestEnum request)
         {
             var validator = new UsuarioValidator(_usuarioRepository, request);
@@ -86,6 +97,6 @@ namespace Fleet.Service
             }
         }
 
-       
+
     }
 }

@@ -15,32 +15,6 @@ namespace Fleet.Controllers
             _usuarioService = usuarioService;
         }
 
-        [HttpPost("[Action]")]
-        [AllowAnonymous]
-        public IActionResult EsqueceuSenha([FromBody] string email, string codigo)  //Recebe e-mail e código para resetar a senha
-        {
-
-            return Ok(new
-            {
-                email = "Redefinir",
-                codigo = "codigo",
-
-            });
-        }
-
-        [HttpPost("[Action]")]
-        [AllowAnonymous]
-        public IActionResult AlterarSenha([FromBody] string email , string senha, string codigo)  //Recebe o email e senha , enviar o código junto para alterar
-        {
-            return Ok(new
-            {
-                email = "Redefinir",
-                codigo = "codigo",
-                senha = "senha",
-
-            });
-        }
-
         [HttpPost("")]
         [AllowAnonymous]
         public async Task<IActionResult> Criar([FromBody] UsuarioRequest usuarioRequest)
@@ -55,6 +29,15 @@ namespace Fleet.Controllers
         public async Task<IActionResult> Atualizar([FromBody] UsuarioRequest usuarioRequest, [FromRoute] string id)
         {
             await _usuarioService.Atualizar(id, usuarioRequest);
+
+            return Ok();
+        }
+
+        [HttpPut("[Action]")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AlterarSenha([FromBody] string email, [FromBody] string novaSenha)
+        {
+            await _usuarioService.AlterarSenha(email, novaSenha);
 
             return Ok();
         }

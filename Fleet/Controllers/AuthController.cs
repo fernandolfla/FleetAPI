@@ -1,4 +1,5 @@
 using Fleet.Controllers.Model.Request;
+using Fleet.Controllers.Model.Request.Auth;
 using Fleet.Controllers.Model.Response.Auth;
 using Fleet.Interfaces.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +23,18 @@ namespace Fleet.Controllers
         {
             LoginResponse response = await _authService.Logar(loginRequest);
             return Ok(response);
+        }
+
+        [HttpPost("[Action]")]
+        [AllowAnonymous]
+        public IActionResult EsqueceuSenha([FromBody] EsqueceuSenhaRequest request)  //Recebe e-mail e código para resetar a senha
+        {
+
+            return Ok(new
+            {
+                email = "Redefinir",
+                codigo = "codigo",
+            });
         }
     }
 }
