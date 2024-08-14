@@ -35,9 +35,9 @@ namespace Fleet.Controllers
 
         [HttpPut("[Action]")]
         [AllowAnonymous]
-        public async Task<IActionResult> AlterarSenha([FromBody] string email, [FromBody] string novaSenha)
+        public async Task<IActionResult> AlterarSenha([FromBody] AtualizarSenhaRequest request)
         {
-            await _usuarioService.AlterarSenha(email, novaSenha);
+            await _usuarioService.AlterarSenha(request.email, request.novaSenha);
 
             return Ok();
         }
