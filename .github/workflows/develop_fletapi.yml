@@ -31,6 +31,10 @@ jobs:
           $json = Get-Content $appSettingsPath | ConvertFrom-Json
           $json.Authorization.Secret = ${{ secrets.AUTHORIZATION }}
           $json.Crypto.Secret = ${{ secrets.CRYPTO }}
+          $json.Credentials.Email_Envio = ${{ secrets.EMAIL_ENVIO }}
+          $json.Credentials.Email_Servidor = ${{ secrets.EMAIL_SERVIDOR }}
+          $json.Credentials.Email_Porta = ${{ secrets.EMAIL_PORTA }}
+          $json.Credentials.Email_Senha = ${{ secrets.EMAIL_SENHA }}
           $json | ConvertTo-Json -Compress | Set-Content $appSettingsPath
           
       - name: Display content of appsettings.json
