@@ -7,5 +7,6 @@ namespace Fleet.Interfaces.Service;
 public interface IAuthService
 {
     Task<LoginResponse> Logar(LoginRequest login);
-    Task<string> EsqueceuSenha(EsqueceuSenhaRequest request);
+    Task<EsqueceuSenhaResponse> EsqueceuSenha(EsqueceuSenhaRequest request);
+    Task AlterarSenha(string token, string senha);
 }

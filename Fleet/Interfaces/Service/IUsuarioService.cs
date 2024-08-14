@@ -9,6 +9,5 @@ namespace Fleet.Interfaces.Service
         Task Atualizar(string id, UsuarioRequest user);
         Task Deletar(string id);
         Task<List<UsuarioResponse>> Listar();
-        Task AlterarSenha(string email, string novaSenha);
     }
 }

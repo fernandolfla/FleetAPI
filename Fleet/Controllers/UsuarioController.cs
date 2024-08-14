@@ -33,15 +33,6 @@ namespace Fleet.Controllers
             return Ok();
         }
 
-        [HttpPut("[Action]")]
-        [AllowAnonymous]
-        public async Task<IActionResult> AlterarSenha([FromBody] AtualizarSenhaRequest request)
-        {
-            await _usuarioService.AlterarSenha(request.email, request.novaSenha);
-
-            return Ok();
-        }
-
         [HttpDelete("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> Deletar([FromRoute] string id)
