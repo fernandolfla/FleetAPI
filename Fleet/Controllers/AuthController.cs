@@ -27,13 +27,12 @@ namespace Fleet.Controllers
 
         [HttpPost("[Action]")]
         [AllowAnonymous]
-        public IActionResult EsqueceuSenha([FromBody] EsqueceuSenhaRequest request)  //Recebe e-mail e código para resetar a senha
+        public async Task<IActionResult> EsqueceuSenha([FromBody] EsqueceuSenhaRequest request)  //Recebe e-mail e código para resetar a senha
         {
-
+            var response = await _authService.EsqueceuSenha(request);
             return Ok(new
             {
-                email = "Redefinir",
-                codigo = "codigo",
+                codigo = response,
             });
         }
     }

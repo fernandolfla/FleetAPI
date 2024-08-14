@@ -43,6 +43,8 @@ namespace Fleet.Extensions
             services.AddSingleton<ITokenService, TokenService>();
 
             services.AddScoped<IAuthService, AuthService>();
+
+            services.AddSingleton<IEmailService, EmailService>();
         }
 
         /// <summary>
