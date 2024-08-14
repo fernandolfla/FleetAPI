@@ -2,6 +2,7 @@
 using Fleet.Repository;
 using Fleet.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Fleet.Repository
 {
@@ -48,9 +49,9 @@ namespace Fleet.Repository
             return  await _context.Usuarios.AnyAsync(x => x.CPF == cpf && x.Id != id);
         }
 
-        public async Task<Usuario> BuscarEmail(string email)
+        public async Task<Usuario?> Buscar(Expression<Func<Usuario,bool>> exp)
         {
-           return await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == email);
+            return await _context.Usuarios.FirstOrDefaultAsync(exp);
         }
 
         public async Task<bool> Existe(int id)
@@ -63,11 +64,15 @@ namespace Fleet.Repository
             return await _context.Usuarios.ToListAsync();
         }
 
-        public async  Task AtualizarSenha(Usuario novaSenha)
+        public async Task AtualizarSenha(Usuario novaSenha)
         {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == novaSenha.Email);
-            usuario.Senha = novaSenha.Senha;
-            await _context.SaveChangesAsync();
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.Token == novaSenha.Token);
+            if(usuario != null)
+            {
+                usuario.Token = string.Empty;
+                usuario.Senha = novaSenha.Senha;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

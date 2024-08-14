@@ -1,4 +1,5 @@
 ﻿using Fleet.Models;
+using System.Linq.Expressions;
 
 namespace Fleet.Interfaces.Repository
 {
@@ -9,9 +10,9 @@ namespace Fleet.Interfaces.Repository
         Task<bool> ExisteCpf(string cpf, int? id = null);
         Task Deletar(int id);
         Task Atualizar(int id, Usuario usuarioAtualizado);
-        Task<Usuario> BuscarEmail(string email);
         Task<bool> Existe(int id);
         Task<List<Usuario>> Listar();
         Task AtualizarSenha(Usuario novaSenha);
+        Task<Usuario?> Buscar(Expression<Func<Usuario, bool>> exp);
     }
 }

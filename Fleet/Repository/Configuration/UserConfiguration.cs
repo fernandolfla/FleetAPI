@@ -1,5 +1,4 @@
-﻿using Fleet.Enums;
-using Fleet.Models;
+﻿using Fleet.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,7 +15,7 @@ namespace Fleet.Repository.Configuration
 
             builder.Property(x => x.Senha).HasMaxLength(255).IsRequired();
 
-            builder.Property(x => x.Papel).HasMaxLength(255);
+            builder.Property(x => x.Token).HasMaxLength(255);
 
              builder.Property(x => x.Nome).HasMaxLength(255).IsRequired();
 

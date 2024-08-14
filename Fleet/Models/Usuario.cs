@@ -1,6 +1,4 @@
-﻿using Fleet.Enums;
-
-namespace Fleet.Models
+﻿namespace Fleet.Models
 {
     public class Usuario : DbEntity
     {
@@ -9,7 +7,7 @@ namespace Fleet.Models
         public string Email { get; set; } = string.Empty;
         public string Senha { get; set; } = string.Empty;
         public string UrlImagem { get; set; } = string.Empty;
-        public PapelEnum Papel { get; set; }
+        public string Token { get; set; } = string.Empty;
         //public ICollection<UsuarioWorkspace> UsuarioWorkspaces { get; set ;} = [];
     }
 }

@@ -33,7 +33,6 @@ public class UsuarioValidatorUT
             Ativo = true,
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "000.000.000-00",
-            Papel =PapelEnum.Usuario,
             Senha = "Senha123!"
         };
         //Act
@@ -58,7 +57,6 @@ public class UsuarioValidatorUT
             Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "054.214.046-25",
-            Papel = PapelEnum.Usuario,
             Senha = "Senha123!"
         };
         usuarioRepositoryMock.Setup( x => x.ExisteEmail(usuario.Email, null))
@@ -83,7 +81,6 @@ public class UsuarioValidatorUT
             Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "054.214.046-25",
-            Papel =PapelEnum.Usuario,
             Senha = "Senha123!"
         };
 
@@ -108,7 +105,6 @@ public class UsuarioValidatorUT
             Nome=Faker.User.Username(),
             Id = Faker.Number.RandomNumber(1, int.MaxValue),
             CPF = "054.214.046-25",
-            Papel = PapelEnum.Usuario,
             Senha = "Senha123!"
         };
 

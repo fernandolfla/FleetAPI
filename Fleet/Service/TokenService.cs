@@ -26,7 +26,7 @@ namespace Fleet.Service
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Email, usuario.Email),
-                    new Claim("papel", usuario.Papel.ToString())
+                    //new Claim("papel", usuario.Papel.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
