@@ -37,7 +37,7 @@ namespace Fleet.Service
             await _usuarioRepository.Criar(usuario);
         }
 
-         public async Task Atualizar(string id, UsuarioRequest user)
+         public async Task Atualizar(string id, UsurioPutRequest user)
         {
             var usuarioId = int.Parse(CriptografiaHelper.DescriptografarAes(id, Secret));
             var usuario = await _usuarioRepository.Buscar(x => x.Id == usuarioId);
