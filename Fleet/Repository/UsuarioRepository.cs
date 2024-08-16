@@ -35,6 +35,11 @@ namespace Fleet.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task Atualizar(Usuario usuarioAtualizado)
+        {
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<bool> ExisteEmail(string email, int? id = null)
         {
             if(id == null)

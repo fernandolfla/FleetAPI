@@ -15,7 +15,7 @@ namespace Fleet.Controllers
             _usuarioService = usuarioService;
         }
 
-        [HttpPost("")]
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Criar([FromBody] UsuarioRequest usuarioRequest)
         {
@@ -24,31 +24,17 @@ namespace Fleet.Controllers
             return Created();
         }
 
-        [HttpPut("{id}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Atualizar([FromBody] UsuarioRequest usuarioRequest, [FromRoute] string id)
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Atualizar([FromBody] UsuarioRequest usuarioRequest)
         {
-            await _usuarioService.Atualizar(id, usuarioRequest);
+            var clain = User.Claims.FirstOrDefault(x => x.Type == "user");
+            if (clain == null ||  string.IsNullOrEmpty(clain.Value))
+                return Unauthorized();
+
+            await _usuarioService.Atualizar(clain.Value, usuarioRequest);
 
             return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Deletar([FromRoute] string id)
-        {
-            await _usuarioService.Deletar(id);
-
-            return Ok();
-        }
-
-        [HttpGet("")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Listar()
-        {
-            var usuarios = await _usuarioService.Listar();
-
-            return Ok(usuarios);
         }
     }
 }

@@ -8,6 +8,8 @@ using Fleet.Controllers.Model.Request.Usuario;
 using AutoMapper;
 using Fleet.Enums;
 using Fleet.Controllers.Model.Response.Usuario;
+using Fleet.Repository;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Fleet.Service
 {
@@ -37,10 +39,16 @@ namespace Fleet.Service
 
          public async Task Atualizar(string id, UsuarioRequest user)
         {
-            Usuario usuario =_mapper.Map<Usuario>(user);
-            usuario.Id = int.Parse(CriptografiaHelper.DescriptografarAes(id, Secret));
-            await Validar(usuario, UsuarioRequestEnum.Atualizar);
-            await _usuarioRepository.Atualizar(usuario.Id, usuario);
+            var usuarioId = int.Parse(CriptografiaHelper.DescriptografarAes(id, Secret));
+            var usuario = await _usuarioRepository.Buscar(x => x.Id == usuarioId);
+
+            if(usuario == null) throw new BussinessException("Não foi possivel atualizar o usuário");
+            //Validar o objeto que vindo da request
+
+            usuario.Nome = user.Nome;
+            usuario.Email = user.Email;
+
+            await _usuarioRepository.Atualizar(usuario);
         }
 
         public async Task Deletar(string id)

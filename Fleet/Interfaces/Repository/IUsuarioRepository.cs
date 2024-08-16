@@ -10,6 +10,7 @@ namespace Fleet.Interfaces.Repository
         Task<bool> ExisteCpf(string cpf, int? id = null);
         Task Deletar(int id);
         Task Atualizar(int id, Usuario usuarioAtualizado);
+        Task Atualizar(Usuario usuarioAtualizado);
         Task<bool> Existe(int id);
         Task<List<Usuario>> Listar();
         Task AtualizarSenha(Usuario novaSenha);
