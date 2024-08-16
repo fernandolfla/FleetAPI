@@ -26,7 +26,7 @@ namespace Fleet.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Atualizar([FromBody] UsuarioRequest usuarioRequest)
+        public async Task<IActionResult> Atualizar([FromBody] UsurioPutRequest usuarioRequest)
         {
             var clain = User.Claims.FirstOrDefault(x => x.Type == "user");
             if (clain == null ||  string.IsNullOrEmpty(clain.Value))
