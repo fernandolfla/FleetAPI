@@ -8,7 +8,8 @@ namespace Fleet.Repository.Configuration
     {
         public void Configure(EntityTypeBuilder<Visitas> builder)
         {
-
+            builder.Property(x => x.Observacao).HasColumnType("text");
+            builder.Property(x => x.Supervior).HasMaxLength(255);
         }
     }
 }
