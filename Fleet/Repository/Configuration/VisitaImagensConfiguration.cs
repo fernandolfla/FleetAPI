@@ -8,7 +8,7 @@ namespace Fleet.Repository.Configuration
     {
         public void Configure(EntityTypeBuilder<VisitaImagens> builder)
         {
-
+            builder.Property(x => x.Url).HasMaxLength(255);
         }
     }
 }

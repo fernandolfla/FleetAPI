@@ -8,7 +8,8 @@ namespace Fleet.Repository.Configuration
     {
         public void Configure(EntityTypeBuilder<Workspace> builder)
         {
-
+            builder.Property(x => x.Cnpj).HasMaxLength(255);
+            builder.Property(x => x.Fantasia).HasMaxLength(255);
         }
     }
 }

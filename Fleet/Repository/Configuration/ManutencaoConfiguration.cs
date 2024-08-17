@@ -8,7 +8,9 @@ namespace Fleet.Repository.Configuration
     {
         public void Configure(EntityTypeBuilder<Manutencao> builder)
         {
-
+            builder.Property(x => x.Odometro).HasMaxLength(255);
+            builder.Property(x => x.Servicos).HasMaxLength(255);
+            builder.Property(x => x.Observacoes).HasMaxLength(255);
         }
     }
 }

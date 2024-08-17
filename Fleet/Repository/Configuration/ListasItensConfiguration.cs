@@ -8,7 +8,8 @@ namespace Fleet.Repository.Configuration
     {
         public void Configure(EntityTypeBuilder<ListasItens> builder)
         {
-
+            builder.Property(x => x.Titulo).HasMaxLength(255);
+            builder.Property(x => x.Descrição).HasMaxLength(255);
         }
     }
 }
