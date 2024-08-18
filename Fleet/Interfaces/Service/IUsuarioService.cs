@@ -9,5 +9,6 @@ namespace Fleet.Interfaces.Service
         Task Atualizar(string id, UsurioPutRequest user);
         Task Deletar(string id);
         Task<List<UsuarioResponse>> Listar();
+        Task UploadAsync(string id, Stream stream, string fileExtension);
     }
 }

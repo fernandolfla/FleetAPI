@@ -40,11 +40,13 @@ namespace Fleet.Extensions
         {
             services.AddScoped<IUsuarioService, UsuarioService>();
 
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddScoped<IAuthService, AuthService>();
 
-            services.AddSingleton<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
+
+            services.AddScoped<IBucketService, BlobService>();
         }
 
         /// <summary>
