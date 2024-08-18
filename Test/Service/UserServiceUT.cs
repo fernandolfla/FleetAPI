@@ -15,6 +15,7 @@ namespace Fleet.Test.Service;
 public class UserServiceUT
 {
     private Mock<IUsuarioRepository> _usuarioRepository;
+    private Mock<IBucketService> _bucketService;
     private IUsuarioService _service;
     private IConfiguration _configuration;
     private IMapper _mapper;
@@ -29,7 +30,10 @@ public class UserServiceUT
                             .Build();
         var mappingConfig = new MapperConfiguration( mc => mc.AddProfile(new Mapping()));
         _mapper = mappingConfig.CreateMapper();
-        _service = new UsuarioService(_usuarioRepository.Object, _configuration, _mapper);
+
+
+        _bucketService = new Mock<IBucketService>();
+        _service = new UsuarioService(_usuarioRepository.Object, _configuration, _mapper, _bucketService.Object);
     }
 
     [Fact]
