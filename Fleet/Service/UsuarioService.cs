@@ -1,46 +1,37 @@
-﻿using Fleet.Helpers;
+﻿using AutoMapper;
+using Fleet.Controllers.Model.Request.Usuario;
+using Fleet.Controllers.Model.Response.Usuario;
+using Fleet.Enums;
+using Fleet.Helpers;
 using Fleet.Interfaces.Repository;
 using Fleet.Interfaces.Service;
 using Fleet.Models;
-using Fleet.Validators;
 using Fleet.Resources;
-using Fleet.Controllers.Model.Request.Usuario;
-using AutoMapper;
-using Fleet.Enums;
-using Fleet.Controllers.Model.Response.Usuario;
-using Fleet.Repository;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Fleet.Validators;
+using Microsoft.Extensions.Configuration;
 
 namespace Fleet.Service
 {
-    public class UsuarioService : IUsuarioService
+    public class UsuarioService(IUsuarioRepository usuarioRepository,
+                                IConfiguration configuration,
+                                IMapper mapper,
+                                IBucketService bucketService) : IUsuarioService
     {
-        private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-        private string Secret { get => _configuration.GetValue<string>("Crypto:Secret"); }
 
-        public UsuarioService(IUsuarioRepository usuarioRepository,
-                            IConfiguration configuration,
-                            IMapper mapper)
-        {
-            _usuarioRepository = usuarioRepository;
-            _configuration = configuration;
-            _mapper = mapper;
-        }
+        private string Secret { get => configuration.GetValue<string>("Crypto:Secret"); }
 
         public async Task Criar(UsuarioRequest user)
         {
-            Usuario usuario =_mapper.Map<Usuario>(user);
+            Usuario usuario = mapper.Map<Usuario>(user);
             await Validar(usuario, UsuarioRequestEnum.Criar);
 
-            await _usuarioRepository.Criar(usuario);
+            await usuarioRepository.Criar(usuario);
         }
 
          public async Task Atualizar(string id, UsurioPutRequest user)
         {
             var usuarioId = int.Parse(CriptografiaHelper.DescriptografarAes(id, Secret));
-            var usuario = await _usuarioRepository.Buscar(x => x.Id == usuarioId);
+            var usuario = await usuarioRepository.Buscar(x => x.Id == usuarioId);
 
             if(usuario == null) throw new BussinessException("Não foi possivel atualizar o usuário");
             //Validar o objeto que vindo da request
@@ -48,7 +39,7 @@ namespace Fleet.Service
             usuario.Nome = user.Nome;
             usuario.Email = user.Email;
 
-            await _usuarioRepository.Atualizar(usuario);
+            await usuarioRepository.Atualizar(usuario);
         }
 
         public async Task Deletar(string id)
@@ -58,12 +49,12 @@ namespace Fleet.Service
             };
             await Validar(usuario, UsuarioRequestEnum.Deletar);
 
-            await _usuarioRepository.Deletar(usuario.Id);
+            await usuarioRepository.Deletar(usuario.Id);
         }
 
         public async Task<List<UsuarioResponse>> Listar()
         {
-            var usuarios =  await _usuarioRepository.Listar();
+            var usuarios =  await usuarioRepository.Listar();
 
             List<UsuarioResponse> usuariosResponse = [];
 
@@ -80,7 +71,7 @@ namespace Fleet.Service
 
         private async Task Validar(Usuario usuario, UsuarioRequestEnum request)
         {
-            var validator = new UsuarioValidator(_usuarioRepository, request);
+            var validator = new UsuarioValidator(usuarioRepository, request);
             var validationResult = await validator.ValidateAsync(usuario);
             if (validationResult.IsValid)
             {
@@ -93,6 +84,21 @@ namespace Fleet.Service
             }
         }
 
+        public async Task UploadAsync(string id, Stream stream, string fileExtension)
+        {
+            if (stream.Length > 0)
+            {
+                var secretCrypto = configuration.GetValue<string>("Crypto:Secret") ?? throw new BussinessException("falha em criptografia");
+                var userId = CriptografiaHelper.DescriptografarAes(id, secretCrypto) ?? throw new BussinessException("falha para obter o usuario");
 
+                var filename = await bucketService.UploadAsync(stream, fileExtension) ?? throw new BussinessException("não foi possivel salvar a imagem");
+
+                var user = await usuarioRepository.Buscar(x => x.Id == int.Parse(userId)) ?? throw new BussinessException("falha para obter o usuario");
+                if(user != null &&! string.IsNullOrEmpty(user.UrlImagem)) await bucketService.DeleteAsync(user.UrlImagem);
+
+                user.UrlImagem = filename;
+                //await usuarioRepository.Atualizar(user);
+            }
+        }
     }
 }
