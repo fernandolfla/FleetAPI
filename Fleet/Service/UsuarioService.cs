@@ -97,7 +97,7 @@ namespace Fleet.Service
                 if(user != null &&! string.IsNullOrEmpty(user.UrlImagem)) await bucketService.DeleteAsync(user.UrlImagem);
 
                 user.UrlImagem = filename;
-                //await usuarioRepository.Atualizar(user);
+                await usuarioRepository.Atualizar(user);
             }
         }
     }
