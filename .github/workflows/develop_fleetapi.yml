@@ -77,6 +77,6 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: ${{github.workspace}}/myapp 
+          local-dir: ${{github.workspace}}\myapp 
       
       
