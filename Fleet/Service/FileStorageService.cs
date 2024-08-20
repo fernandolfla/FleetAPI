@@ -25,8 +25,10 @@ namespace Fleet.Service
             {
                 if(!File.Exists(filepath)) Directory.CreateDirectory(filepath);
 
-                Stream file = File.Create($"{filepath}\\{filename}");
-                stream.CopyTo(file);
+                using (var file = File.Create($"{filepath}\\{filename}"))
+                {
+                    stream.CopyTo(file);
+                }
             });
 
             return filename;
