@@ -62,15 +62,24 @@ jobs:
       id-token: write
 
     steps:
+     
+      - name: Create app_offline.htm
+        run: echo "SITE EM MANUTENÇÃO" > ${{github.workspace}}/app_offline.htm
+
+      - name: 📂 Envia o arquivo para pausar a api
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
           path: ${{github.workspace}} 
-
-      - name: Create app_offline.htm
-        run: echo "SITE EM MANUTENÇÃO" > ${{github.workspace}}/app_offline.htm
-
+      
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
@@ -89,5 +98,4 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          server-dir: /app_offline.htm
           delete-remote: true
