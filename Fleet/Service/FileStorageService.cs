@@ -6,7 +6,7 @@ namespace Fleet.Service
     {
         public async Task DeleteAsync(string filename)
         {
-            var filepath = $"{AppContext.BaseDirectory}\\imagens\\pefil\\{filename}";
+            var filepath = $"{AppContext.BaseDirectory}\\images\\profile\\{filename}";
             await Task.Run(() =>
             {
                 if (File.Exists(filepath))
@@ -19,7 +19,7 @@ namespace Fleet.Service
         public async Task<string> UploadAsync(Stream stream, string fileExtension)
         {
             var filename = $"{Guid.NewGuid().ToString()}.{fileExtension}";
-            var filepath = $"{AppContext.BaseDirectory}\\imagens\\pefil";
+            var filepath = $"{AppContext.BaseDirectory}\\images\\profile";
 
             await Task.Run(() =>
             {
