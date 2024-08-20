@@ -46,7 +46,7 @@ namespace Fleet.Extensions
 
             services.AddScoped<IEmailService, EmailService>();
 
-            services.AddScoped<IBucketService, BlobService>();
+            services.AddScoped<IBucketService, FileStorageService>();
         }
 
         /// <summary>
