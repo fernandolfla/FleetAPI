@@ -83,5 +83,5 @@ jobs:
         with:
           app-name: 'FletApi'
           slot-name: 'Production'
-          package: ${{github.workspace}}/myapp  # Certifica que o caminho do pacote esteja correto
+          package: ${{github.workspace}}\myapp  # Certifica que o caminho do pacote esteja correto
 
