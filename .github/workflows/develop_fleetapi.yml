@@ -46,7 +46,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{github.workspace}}/myapp
+        run: dotnet publish -c Release -o ${{github.workspace}}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -73,10 +73,10 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          server: juriseg.ddns.net #${{ secrets.FTP_HOST }}
-          username: fleet # ${{ secrets.FTP_USER }}
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: 2121 #${{ secrets.FTP_PORT }}
-          protocol: ftps
+          port: ${{ secrets.FTP_PORT }}
+          #protocol: ftps
       
       
