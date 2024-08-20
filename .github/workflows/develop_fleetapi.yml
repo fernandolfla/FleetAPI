@@ -68,6 +68,20 @@ jobs:
           name: .net-app
           path: ${{github.workspace}} 
 
+      - name: Create app_offline.htm
+        run: echo "SITE EM MANUTENÇÂO" > app_offline.htm
+
+      - name: Upload app_offline.htm
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: app_offline.htm
+          remote-dir: /
+
+
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
@@ -75,4 +89,17 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-      
+
+      - name: Remove app_offline.htm
+        run: rm app_offline.htm
+
+      - name: Remove app_offline.htm from server
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: /dev/null
+          remote-dir: /app_offline.htm
+          delete-remote: true
