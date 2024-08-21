@@ -4,5 +4,6 @@
     {
         public string Cnpj { get; set; } = string.Empty;
         public string Fantasia { get; set; } = string.Empty;
+        public string UrlImagem { get; set; } = string.Empty;
     }
 }   
