@@ -98,7 +98,6 @@ namespace Fleet.Extensions
             });
         }
 
-
         private static void AdicionarMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Mapping));
